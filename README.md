@@ -25,7 +25,7 @@ MoodMap leverages state-of-the-art language models to provide a unique and perso
 Clone the repo and install dependencies:
 
 ```bash
-git clone https://github.com/yourusername/moodmap.git
+git clone https://github.com/bashyrov/moodmap.git
 cd moodmap
 python -m venv venv
 source venv/bin/activate
