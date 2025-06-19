@@ -12,7 +12,7 @@
 ## 🚀 Tech Stack
 
 - Python / Django
-- HTML + CSS + JS (optional frontend framework)
+- HTML + CSS + JS 
 - PostgreSQL or SQLite
 - OpenAI API
 
