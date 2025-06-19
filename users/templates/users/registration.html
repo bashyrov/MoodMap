@@ -1,0 +1,47 @@
+{% extends 'main/base.html' %}
+
+{% load widget_tweaks %}
+
+{% block title %}
+Registration
+{% endblock %}
+
+{% block content %}
+
+
+<!--<div class="container col-xl-12 col-xxl-10 px-4 py-5">-->
+  <div class="row align-items-center g-5 py-5 d-flex">
+    <div class="col-lg-6 text-center text-lg-start">
+      <h1 class="display-4 fw-bold lh-1 text-body-emphasis mb-3">Rejestracja MoodAccount</h1>
+      <p class="col-lg-10 fs-4">
+            Stwórz konto i rozpocznij swoją podróż ku lepszemu zdrowiu psychicznemu. MoodMap pomoże Ci monitorować emocje, uzyskać wsparcie od AI i profesjonalistów oraz poprawić samopoczucie na co dzień. Dołącz teraz i poczuj różnicę!
+      </p>
+    </div>
+    <div class="col-lg-6">
+      <form action="{% url 'users:registration' %}" method="post" class="p-4 p-md-5 border rounded-3 bg-body-tertiary">
+          {% csrf_token %}
+        {% for field in form %}
+            <div class="col-12">
+                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                {{ field|add_class:"form-control-lg"  }}
+                {% if field.errors %}
+                    <div class="text-danger">
+                        {% for error in field.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <div class="checkbox mb-3">
+          <small class="text-body-secondary">By clicking Sign up, you agree to the terms of use.</small>
+        </div>
+          <hr class="my-4">
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Sign up</button>
+      </form>
+    </div>
+  </div>
+<!--</div>-->
+
+
+{% endblock %}

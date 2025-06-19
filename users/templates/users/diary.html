@@ -1,0 +1,121 @@
+{% extends 'main/base.html' %}
+
+{% load widget_tweaks %}
+
+{% block title %}
+MoodMap
+{% endblock %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Diary</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+{% block content %}
+
+<div>
+
+<div class="row align-items-center g-lg-5 py-5">
+  <div class="col-lg-6 text-center text-lg-start">
+    <h1 class="display-4 fw-bold lh-1 text-body-emphasis mb-3">Twój Dziennik Emocji</h1>
+    <p class="col-lg-10 fs-4">
+    Zapisuj swoje myśli i uczucia każdego dnia, aby lepiej zrozumieć swoje emocje i śledzić postępy. MoodMap pomoże Ci analizować Twoje wpisy, odkrywać wzorce oraz dostosować działania, które poprawią Twoje samopoczucie.    </p>
+  </div>
+  <div class="col-md-10 mx-auto col-lg-6">
+    <form method="POST" class="p-4 p-md-5 border rounded-3 bg-body-tertiary">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="col-12 mb-3">
+          <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+          {{ field }}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary">Zapisz</button>
+    </form>
+  </div>
+</div>
+  <form method="GET" class="mb-4">
+  <div class="row">
+    <div class="col-md-3">
+      <select name="year" class="form-select" onchange="this.form.submit()">
+        <option value="{{ current_year }}" {% if selected_year == current_year %}selected{% endif %}>Bieżący rok</option>
+        <option value="2024" {% if selected_year == 2024 %}selected{% endif %}>2024</option>
+        <option value="2023" {% if selected_year == 2023 %}selected{% endif %}>2023</option>
+        <option value="2022" {% if selected_year == 2022 %}selected{% endif %}>2022</option>
+        <option value="2021" {% if selected_year == 2021 %}selected{% endif %}>2021</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <select name="month" class="form-select " onchange="this.form.submit()">
+        <option value='all' {% if selected_month == "all" %}selected{% endif %}>Wszystko</option>
+        <option value="1" {% if selected_month == 1 %}selected{% endif %}>Styczeń</option>
+        <option value="2" {% if selected_month == 2 %}selected{% endif %}>Luty</option>
+        <option value="3" {% if selected_month == 3 %}selected{% endif %}>Marzec</option>
+        <option value="4" {% if selected_month == 4 %}selected{% endif %}>Kwiecień</option>
+        <option value="5" {% if selected_month == 5 %}selected{% endif %}>Maj</option>
+        <option value="6" {% if selected_month == 6 %}selected{% endif %}>Czerwiec</option>
+        <option value="7" {% if selected_month == 7 %}selected{% endif %}>Lipiec</option>
+        <option value="8" {% if selected_month == 8 %}selected{% endif %}>Sierpień</option>
+        <option value="9" {% if selected_month == 9 %}selected{% endif %}>Wrzesień</option>
+        <option value="10" {% if selected_month == 10 %}selected{% endif %}>Październik</option>
+        <option value="11" {% if selected_month == 11 %}selected{% endif %}>Listopad</option>
+        <option value="12" {% if selected_month == 12 %}selected{% endif %}>Grudzień</option>
+      </select>
+    </div>
+  </div>
+</form>
+
+{% if diary_entries %}
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for entry in diary_entries %}
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm">
+          <div class="card-header py-3">
+            <h4 class="my-0 fw-normal">{{ entry.date }}</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">{{ entry.title }}</h1>
+            <p><strong>Wpis:</strong> {{ entry.content }}</p>
+           <form method="POST" action="{% url 'users:diary' %}" class="d-inline-block">
+            {% csrf_token %}
+            <input type="hidden" name="entry_id" value="{{ entry.id }}">
+            <div class="d-flex justify-content-center">
+              <div class="d-flex justify-content-between" style="width: 100%; max-width: 400px;">
+                <button type="submit" name="delete_entry" class="btn btn-lg btn-outline-primary me-2 ">Usuń</button>
+                <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#viewEntryModal{{ entry.id }}">
+                  Zobacz
+                </button>
+              </div>
+            </div>
+          </form>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="viewEntryModal{{ entry.id }}" tabindex="-1" aria-labelledby="viewEntryModalLabel{{ entry.id }}" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="viewEntryModalLabel{{ entry.id }}">Wpis: od {{ entry.date }}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+              <h3>{{ entry.title }}</h3>
+              <p><strong>Wpis:</strong> {{ entry.content }}</p>
+              <p><strong>Analiza AI:</strong> {{ entry.recommendation }}</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" data-bs-dismiss="modal">Zamknij</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+{% endif %}
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</div>
+
+{% endblock %}
