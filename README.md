@@ -13,7 +13,7 @@
 
 - Python / Django
 - HTML + CSS + JS 
-- PostgreSQL or SQLite
+- SQLite
 - OpenAI API
 
 ## 🤖 Powered by OpenAI
